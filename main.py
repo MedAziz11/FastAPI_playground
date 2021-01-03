@@ -8,19 +8,21 @@ from fastapi_mail import FastMail, MessageSchema,ConnectionConfig
 from schema import  UserSchema
 from models import User
 from mongoengine.errors import NotUniqueError
+from os import  getenv
+from dotenv import load_dotenv
 
+load_dotenv()
 
 app = FastAPI()
 
 conf = ConnectionConfig(
-    MAIL_USERNAME = "clab.dev20@gmail.com",
-    MAIL_PASSWORD = "clabdev123",
-    MAIL_FROM = "clab.dev20@gmail.com",
+    MAIL_USERNAME = getenv("GMAIL"),
+    MAIL_PASSWORD = getenv("PASSWORD"),
+    MAIL_FROM = getenv("GMAIL"),
     MAIL_PORT = 587,
     MAIL_SERVER = "smtp.gmail.com",    
     MAIL_TLS = True,
     MAIL_SSL = False
-
 )
 
 @app.post('/api/register')
