@@ -28,9 +28,11 @@ conf = ConnectionConfig(
 @app.post('/api/register')
 async def register_user(background_tasks: BackgroundTasks, payload: UserSchema)-> JSONResponse:
     try:
+        
         user = User(full_name=payload.full_name, email=payload.email)
         user.save()
         registeredUser = UserSchema(full_name=user.full_name, email=user.email)
+        
     except NotUniqueError:
         return JSONResponse(status_code=404, content={"error": "Email already used"})
 
