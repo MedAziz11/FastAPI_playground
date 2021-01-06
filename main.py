@@ -1,7 +1,6 @@
 from fastapi import FastAPI, BackgroundTasks
 from typing import Optional
 from fastapi.responses import JSONResponse
-from fastapi.encoders import jsonable_encoder
 
 from fastapi_mail import FastMail, MessageSchema,ConnectionConfig
 
@@ -34,7 +33,7 @@ async def register_user(background_tasks: BackgroundTasks, payload: UserSchema)-
         registeredUser = UserSchema(full_name=user.full_name, email=user.email)
         
     except NotUniqueError:
-        return JSONResponse(status_code=404, content={"error": "Email already used"})
+        return JSONResponse(status_code=400, content={"error": "Email already used"})
 
     message = MessageSchema(
     subject="Registered",
@@ -46,4 +45,4 @@ async def register_user(background_tasks: BackgroundTasks, payload: UserSchema)-
     background_tasks.add_task(fm.send_message,message)
     
     
-    return JSONResponse(content=jsonable_encoder(registeredUser) , status_code=201)
+    return JSONResponse(content={**registeredUser.dict()} , status_code=201)
