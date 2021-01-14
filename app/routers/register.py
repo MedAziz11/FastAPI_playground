@@ -1,18 +1,19 @@
+from fastapi import APIRouter
 from fastapi import FastAPI, BackgroundTasks
 from typing import Optional
 from fastapi.responses import JSONResponse
 
 from fastapi_mail import FastMail, MessageSchema,ConnectionConfig
 
-from schema import  UserSchema
-from models import User
+from schema.user_schema import  UserSchema
+from models.user import User
 from mongoengine.errors import NotUniqueError
 from os import  getenv
 from dotenv import load_dotenv
 
 load_dotenv()
 
-app = FastAPI()
+router = APIRouter()
 
 conf = ConnectionConfig(
     MAIL_USERNAME = getenv("GMAIL"),
@@ -24,7 +25,7 @@ conf = ConnectionConfig(
     MAIL_SSL = False
 )
 
-@app.post('/api/register')
+@router.post('/api/register')
 async def register_user(background_tasks: BackgroundTasks, payload: UserSchema)-> JSONResponse:
     try:
         
